@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChopRead — Trading SOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080d;
+  --surface:#0c0f18;
+  --surface2:#10141f;
+  --border:#1a2030;
+  --border2:#232b3e;
+  --text:#c8d0e0;
+  --text2:#8896b0;
+  --text3:#4a5568;
+  --white:#f0f4ff;
+  --teal:#C2790A;
+  --green:#34d399;
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --purple:#a78bfa;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;margin:0;padding:0 0 100px}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(6,8,13,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px}
+.nav-brand{color:var(--white);font-size:15px;font-weight:700;letter-spacing:-.3px}
+.nav-brand span{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:20px}
+.nav-back{color:var(--text2);font-size:13px;font-weight:500;text-decoration:none;transition:color .15s}
+.nav-back:hover{color:var(--white)}
+.nav-print{background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all .15s;letter-spacing:.2px}
+.nav-print:hover{border-color:var(--teal);color:var(--teal)}
+
+/* WRAP */
+.wrap{max-width:860px;margin:0 auto;padding:56px 24px 0}
+
+/* HERO */
+.hero{margin-bottom:64px}
+.hero-label{display:inline-flex;align-items:center;gap:8px;background:rgba(194,121,10,.07);border:1px solid rgba(194,121,10,.2);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
+.hero-title{font-size:36px;font-weight:800;color:var(--white);letter-spacing:-1px;margin:0 0 10px;line-height:1.15}
+.hero-title span{color:var(--teal)}
+.hero-sub{color:var(--text2);font-size:15px;font-weight:400;margin:0}
+.hero-meta{display:flex;align-items:center;gap:16px;margin-top:16px}
+.hero-meta a{color:var(--teal);font-size:13px;font-weight:500;text-decoration:none;transition:opacity .15s}
+.hero-meta a:hover{opacity:.75}
+.hero-divider{width:4px;height:4px;border-radius:50%;background:var(--border2)}
+
+/* SECTION HEADER */
+.section-wrap{margin:56px 0 28px;position:relative}
+.section-ghost{position:absolute;top:-28px;left:-8px;font-size:96px;font-weight:900;color:var(--white);opacity:.03;line-height:1;pointer-events:none;user-select:none;letter-spacing:-4px}
+.section-label{display:inline-block;font-size:10px;font-weight:700;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.section-title{font-size:20px;font-weight:700;color:var(--white);margin:0;letter-spacing:-.3px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+
+/* STEP CARDS */
+.step-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;margin-bottom:16px;position:relative;overflow:hidden}
+.step-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--teal),transparent)}
+.step-num{font-size:10px;font-weight:700;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.step-title{font-size:16px;font-weight:700;color:var(--white);margin:0 0 14px;letter-spacing:-.2px}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0}
+.callout-hd{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.callout-green{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2)}
+.callout-green .callout-hd{color:var(--green)}
+.callout-red{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2)}
+.callout-red .callout-hd{color:var(--red)}
+.callout-yellow{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2)}
+.callout-yellow .callout-hd{color:var(--yellow)}
+.callout-blue{background:rgba(194,121,10,.07);border:1px solid rgba(194,121,10,.2)}
+.callout-blue .callout-hd{color:var(--teal)}
+
+/* TEXT */
+p{margin:0 0 12px;color:var(--text)}
+p:last-child{margin-bottom:0}
+strong{color:var(--white);font-weight:600}
+h3{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px}
+ul,ol{padding-left:20px;margin:0 0 12px;color:var(--text)}
+li{margin-bottom:6px}
+code{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--teal)}
+
+/* COLOR UTILS */
+.g{color:var(--green)}
+.r{color:var(--red)}
+.y{color:var(--yellow)}
+.dim{color:var(--text3)}
+
+/* TABLES */
+table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:16px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+thead{background:var(--surface2)}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+th:first-child{border-radius:10px 0 0 0}
+th:last-child{border-radius:0 10px 0 0}
+td{padding:10px 14px;vertical-align:top;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+
+/* TIMING GRID */
+.timing-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.timing-box{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:18px 20px}
+.timing-label{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+
+/* CHECKLIST */
+.checklist{list-style:none;padding:0;margin:0 0 12px}
+.checklist li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)}
+.checklist li:last-child{border-bottom:none}
+.ck{flex-shrink:0;width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);background:var(--surface2);margin-top:2px;display:flex;align-items:center;justify-content:center}
+.ck::after{content:'✓';color:var(--teal);font-size:10px;font-weight:700;opacity:0}
+
+/* FOOTER */
+.site-footer{margin-top:72px;padding-top:28px;border-top:1px solid var(--border)}
+.site-footer-inner{color:var(--text3);font-size:12px;line-height:1.8}
+.site-footer-inner a{color:var(--teal);text-decoration:none;font-size:12px;transition:opacity .15s}
+.site-footer-inner a:hover{opacity:.75}
+.disclaimer{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:14px;color:var(--text3);font-size:12px;line-height:1.7}
+
+@media print{
+  .nav{display:none}
+  body{background:#fff;color:#000;font-size:11px}
+  .step-card,.card,.callout,.timing-box{border-color:#ccc;page-break-inside:avoid}
+  th{color:#333}
+  td{color:#222}
+  .g{color:#1a6a1a}.r{color:#aa2222}.y{color:#886600}.dim{color:#999}
+  .section-ghost{display:none}
+  .callout-green{background:#f0fff4;border-color:#6d6}
+  .callout-red{background:#fff0f0;border-color:#e66}
+  .callout-yellow{background:#fffbf0;border-color:#cc9}
+  .callout-blue{background:#f0faff;border-color:#C2790A}
+}
+
+@media(max-width:640px){
+  .timing-grid{grid-template-columns:1fr}
+  .hero-title{font-size:28px}
+  .section-ghost{font-size:72px}
+  .wrap{padding:48px 16px 0}
+  .nav{padding:0 16px}
+}
+</style>
+<script src="/gate.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Chop<span>Read</span></div>
+    <div class="nav-links">
+      <a class="nav-back" href="https://app.chopread.com">← Back to App</a>
+      <button class="nav-print" onclick="window.print()">⎙ Save as PDF</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Standard Operating Procedure</div>
+  <h1 class="hero-title">Step-by-Step<br><span>Trading Guide</span></h1>
+  <p class="hero-sub">Decision filter, not a signal generator. Follow this SOP every session — no exceptions.</p>
+  <div class="hero-meta">
+    <span style="color:var(--text3);font-size:13px">ChopRead</span>
+    <div class="hero-divider"></div>
+    <a href="changelog.html">View Changelog →</a>
+  </div>
+</div>
+
+<!-- BEFORE YOU OPEN -->
+<div class="section-wrap">
+  <div class="section-ghost">00</div>
+  <div class="section-label">Pre-Session</div>
+  <div class="section-title">Before You Open the Tool</div>
+</div>
+
+<p>ChopRead is a decision filter, not a signal generator. Its job is to keep you out of bad trades. Most days, the right answer is to not trade. Follow this SOP every session — no exceptions.</p>
+
+<div class="callout callout-red">
+  <div class="callout-hd">The One Rule That Overrides Everything</div>
+  If SPY is in a <strong>BEAR trend</strong> (below its 20-day SMA), do not take any CALL positions. The backtest showed a 11.2% win rate on calls during bear market phases. In a bear market: use the 07 PUTS tab for swing puts, and the 06 0DTE tab (PUT only filter) for same-day plays.
+</div>
+
+<!-- WORKFLOW -->
+<div class="section-wrap">
+  <div class="section-ghost">01</div>
+  <div class="section-label">Workflow</div>
+  <div class="section-title">Step-by-Step Workflow</div>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 00</div>
+  <div class="step-title">Check Signal Intelligence — Before You Do Anything Else</div>
+  <p>Scroll down to the <strong>📡 Signal Intelligence</strong> panel on the Scanner tab. It auto-refreshes from @AdamMancini4, @TheOwlsCapital, and @Simply0DTE every 2 hours. If you saw something relevant in Discord overnight, paste it in with the <strong>📋 Paste Intel</strong> button.</p>
+  <table>
+    <thead><tr><th>What You See</th><th>What It Means</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="g">⚡ HIGH CONFIDENCE + BULLISH</td><td>3+ sources agree — macro tailwind confirmed</td><td>Prioritize CALL setups today</td></tr>
+      <tr><td class="r">⚡ HIGH CONFIDENCE + BEARISH</td><td>3+ sources agree — macro headwind confirmed</td><td>Switch to PUTS tab or sit flat</td></tr>
+      <tr><td class="y">NEUTRAL or 1–2 sources</td><td>No strong consensus</td><td>Proceed normally, rely on scanner score</td></tr>
+      <tr><td>Specific tickers mentioned</td><td>Institutional flow or analyst focus</td><td>Cross-reference those tickers in scanner</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:4px"><strong>Autonomous alerts:</strong> The scanner runs every 15 min during market hours via GitHub Actions. When a score ≥ 66 + HVR ≥ 63% setup is found, a push notification fires to your phone via ntfy — no page needs to be open. When you get the alert, open the tool, Analyze the ticker, and follow the normal workflow from Step 03.</p>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 01</div>
+  <div class="step-title">Read the Market Context Bar</div>
+  <p>The top bar loads automatically when the page opens. Read it before doing anything else.</p>
+  <table>
+    <thead><tr><th>Indicator</th><th>What It Means</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="g">VIX &lt; 20</td><td>Options are cheap — good time to buy</td><td>Proceed normally</td></tr>
+      <tr><td class="y">VIX 20–30</td><td>Normal environment — price options accordingly</td><td>Proceed, check sizing</td></tr>
+      <tr><td class="r">VIX &gt; 30</td><td>Expensive premium — buyers have a math disadvantage</td><td>Reduce size or use spreads only</td></tr>
+      <tr><td class="g">SPY ↑ BULL</td><td>Market above 20-day SMA — calls have a tailwind</td><td>CALL setups valid · 0DTE: use CALL only filter</td></tr>
+      <tr><td class="r">SPY ↓ BEAR</td><td>Market below 20-day SMA — calls statistically fail</td><td><strong>No calls.</strong> Switch to 07 PUTS tab or 0DTE PUT only</td></tr>
+      <tr><td>F&amp;G &lt; 25</td><td>Extreme Fear — market oversold, calls can be cheap</td><td>Look for mean-reversion calls</td></tr>
+      <tr><td>F&amp;G &gt; 75</td><td>Extreme Greed — complacency, market may pull back</td><td>Tighten stops, reduce size</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 02</div>
+  <div class="step-title">Run the Scanner — Find Candidates</div>
+  <p>Click <strong>Scan</strong> on the Scanner tab (or use the automated Morning Scanner which runs 100+ liquid tickers in one shot). Wait for all rows to load (5–30 seconds depending on watchlist size).</p>
+  <p><strong>The threshold is Score ≥ 65.</strong> Anything below is statistically in the dead zone — do not analyze it. The backtest showed 0% win rate at scores 68–75 in many conditions; below 65 is even worse.</p>
+  <p>Use the <strong>⚡ PRIME ONLY</strong> toggle to filter the Morning Scanner results to only show score 65–66 setups with HV Rank ≥ 40% — the statistically cleanest window from the 18-month backtest.</p>
+  <table>
+    <thead><tr><th>Score</th><th>What It Means</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="g">≥ 75</td><td>Strong setup — multiple signals aligned</td><td>Analyze immediately</td></tr>
+      <tr><td class="g">65–74</td><td>Good setup — worth analyzing</td><td>Analyze, check checklist</td></tr>
+      <tr><td class="y">50–64</td><td>Moderate — below threshold</td><td>Watch for tomorrow, do not trade</td></tr>
+      <tr><td class="dim">&lt; 50</td><td>Weak — no alignment</td><td>Skip entirely</td></tr>
+    </tbody>
+  </table>
+  <p>Also check the scanner columns to understand WHY a ticker scored high:</p>
+  <ul>
+    <li><strong>RSI</strong> — for calls, want RSI &lt; 50 (room to run). RSI &gt; 65 = overbought, less ideal</li>
+    <li><strong>ADX</strong> — trend strength. ≥ 25 = trending, ≥ 40 = strong trend. ADX &lt; 20 = choppy = skip</li>
+    <li><strong>HV Rank</strong> — 40–74% is the sweet spot. &lt;40% = stock not moving enough; skip (except NVDA)</li>
+    <li><strong>Vol</strong> — relative to average. 1.5×+ confirms institutions are moving the stock</li>
+    <li><strong>Trend / Age</strong> — Bull or Bear plus days since EMA crossover. &gt;20 days old = late entry risk</li>
+    <li><span class="g"><strong>✓0DTE badge</strong></span> — appears next to score when a live SPY OR signal matches the stock's direction. Highest-conviction setup. <span class="dim"><strong>⊘0DTE</strong></span> = opposite direction from SPY signal — proceed with extra caution.</li>
+  </ul>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 03</div>
+  <div class="step-title">Deep Analyze Each Candidate</div>
+  <p>Click a row in the scanner (or type the ticker in the Analyze tab). The tool fetches 6 months of data and computes all indicators. Read the signal cards carefully.</p>
+
+  <h3>Signal Cards — What to Look For</h3>
+  <table>
+    <thead><tr><th>Card</th><th>Green</th><th>Yellow / Red</th></tr></thead>
+    <tbody>
+      <tr><td>Short Trend (EMA9/20)</td><td>EMA9 &gt; EMA20 — bullish crossover</td><td>EMA9 &lt; EMA20 — avoid calls</td></tr>
+      <tr><td>Med Trend (SMA50)</td><td>Price &gt; SMA50</td><td>Price &lt; SMA50 — macro headwind</td></tr>
+      <tr><td>RSI(14)</td><td>&lt; 50 (room to run for calls)</td><td>&gt; 65 = overbought, lower entry odds</td></tr>
+      <tr><td>ADX(14)</td><td>≥ 25 trending, ≥ 40 strong</td><td>&lt; 20 = choppy market, random outcomes</td></tr>
+      <tr><td><strong>HV Rank</strong></td><td>40–74th percentile (sweet spot)</td><td>&lt; 40 = SKIP (stock not moving enough)</td></tr>
+      <tr><td><strong>Trend Age</strong></td><td>≤ 5 days since crossover (fresh entry)</td><td>&gt; 20 days = late, trend likely spent</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Kelly Regime Badge</h3>
+  <p>The Trade Rec box shows a regime badge based on your last closed trade:</p>
+  <ul>
+    <li><strong>🔥 HOT</strong> — Last trade was a winner within 10 days. Historical WR after a win: 72.6%, PF 8.2. Size up to Half-Kelly in the Selector.</li>
+    <li><strong>❄ COLD</strong> — Last trade was a loser within 10 days. Historical WR after a loss: 7.1%, PF 0.22. Minimum size or skip.</li>
+    <li><strong>(no badge)</strong> — Neutral. First trade, or last close was &gt;10 days ago. Use standard risk %.</li>
+  </ul>
+
+  <h3>The 5-Point Pre-Trade Checklist</h3>
+  <p>The Analyze tab shows a checklist that auto-computes. Need <strong>4 or 5 out of 5</strong> for high confidence. 3/5 = marginal (half size or skip). Below 3 = do not trade.</p>
+  <ul class="checklist">
+    <li><span class="ck"></span><span><strong>Macro aligned</strong> — SPY in bull trend for calls, bear for puts</span></li>
+    <li><span class="ck"></span><span><strong>HV Rank ≥ 40</strong> — stock is moving enough to hit 2×ATR target</span></li>
+    <li><span class="ck"></span><span><strong>Score not in dead zone</strong> — score outside 68–75 range where backtest shows 0% WR</span></li>
+    <li><span class="ck"></span><span><strong>Cooldown clear</strong> — no losing trade on this ticker within the cooldown period</span></li>
+    <li><span class="ck"></span><span><strong>No earnings &lt; 14 days</strong> — earnings cause IV spikes then crush, killing direction plays</span></li>
+  </ul>
+
+  <div class="callout callout-yellow" style="margin-top:16px">
+    <div class="callout-hd">The Cooldown Rule Explained</div>
+    When you click "Send to Selector," the tool stores your entry price. If the stock is down (for a call) or up (for a put) at the next signal, the prior trade is classified as a loss. The backtest showed: after a losing TSLA call, the next signal had only a 4% win rate. The cooldown enforces a 7-day pause. After a win, it shortens to 3 days (next signal has 81% WR when prior trade was winning).
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 04</div>
+  <div class="step-title">Use the Selector — Find Your Strike</div>
+  <p>Click <strong>"Send to Selector"</strong> (only active when checklist ≥ 3/5). The Selector auto-fills ticker, price, direction, IV, and ATR. If you type a ticker directly in the Selector, clicking <strong>Find Options</strong> will automatically fetch the live price from Tradier before calculating — you never need to enter the price manually.</p>
+  <p>The <strong>Kelly Sizing Panel</strong> appears below the strike matrix after running Find Options. It shows your current regime (HOT/COLD/NEUTRAL), Full Kelly %, Half-Kelly %, and the recommended dollar amount and contract count at each level. Only size up to Half-Kelly — Full Kelly is shown for reference only.</p>
+
+  <h3>Reading the Options Matrix</h3>
+  <table>
+    <thead><tr><th>Column</th><th>What It Means</th><th>What to Look For</th></tr></thead>
+    <tbody>
+      <tr><td>Delta</td><td>How much the option moves per $1 stock move</td><td>0.25–0.50 for directional swing trades</td></tr>
+      <tr><td>DTE</td><td>Days until expiry</td><td>7–21 DTE for swings (enough time, not too expensive)</td></tr>
+      <tr><td>Premium / $/contract</td><td>Cost per option (×100 shares)</td><td>Premium ≤ your max risk per trade</td></tr>
+      <tr><td>PoP</td><td>Probability of profit at expiry</td><td>30–45% is normal for directional options</td></tr>
+      <tr><td>Max Lots</td><td>Max contracts given your account risk settings</td><td>Never exceed — this IS your risk management</td></tr>
+      <tr><td>BE Move</td><td>% move stock needs just to break even</td><td>Compare to ATR: needs to be &lt; 1.5× daily ATR</td></tr>
+      <tr><td class="y">★ row</td><td>Tool's recommended strike (best balance of delta, BE, PoP)</td><td>Start here — adjust only if you have a specific reason</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Breakeven Check</h3>
+  <p>Below the matrix, the tool shows: <em>"Break-even: needs +X% move by expiry → within 1×ATR ✓ reachable"</em></p>
+  <ul>
+    <li><span class="g">Within 1×ATR</span> — reachable in a normal day. Best scenario.</li>
+    <li><span class="y">1–1.5×ATR</span> — possible, needs a good move. Acceptable.</li>
+    <li><span class="r">&gt; 2×ATR</span> — mathematically difficult. Consider going closer to ATM.</li>
+  </ul>
+
+  <div class="callout callout-blue" style="margin-top:16px">
+    <div class="callout-hd">Position Sizing — Non-Negotiable</div>
+    Your "Max per trade" setting defines your maximum dollar risk. ChopRead shows Max Lots based on this. Never exceed it. If Max Lots shows &lt;1, your account is too small for that contract — either: (a) adjust your max risk % up slightly, (b) move to a closer-to-ATM strike with a lower premium, or (c) skip the trade. Losing 2× your max risk on one trade because you bought 2 contracts instead of 1 is the fastest path to blowing an account.
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 05</div>
+  <div class="step-title">Execute at Your Broker</div>
+  <p>Before placing the order, do a 90-second live verification at your broker:</p>
+  <ol>
+    <li>Open the specific expiration in your broker's chain. Find the strike ChopRead recommended (★).</li>
+    <li>Calculate bid/ask spread: <strong>(Ask − Bid) ÷ Mid × 100</strong>. If &gt; 10%, move one strike closer to ATM and recheck. If &gt; 20% at ATM, the contract is illiquid — skip today.</li>
+    <li>Place a <strong>limit order at the mid-price</strong>.</li>
+    <li>If unfilled after 60–90 seconds, raise limit by $0.02–0.05. Repeat once. If still unfilled, cancel — the market moved.</li>
+    <li><strong>Never use a market order on options.</strong></li>
+  </ol>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 06</div>
+  <div class="step-title">Log the Trade Immediately</div>
+  <p>Go to the <strong>Journal tab</strong> and log before you do anything else. Record:</p>
+  <ul>
+    <li>Ticker, direction, strike, DTE at entry, contracts</li>
+    <li>Entry price ($/share), setup score, your reason</li>
+  </ul>
+  <p>Set a reminder (phone alarm, calendar) for your exit check date: 14 DTE from entry, or when either stop/target is hit.</p>
+</div>
+
+<div class="step-card">
+  <div class="step-num">Step 07</div>
+  <div class="step-title">Manage the Trade — Exit Rules</div>
+  <p>Check the trade once per day, end of day. Do not intraday-manage directional options — theta and IV noise create false signals intraday.</p>
+  <table>
+    <thead><tr><th>Condition</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="r">Option loses 50% of entry value</td><td><strong>CLOSE immediately.</strong> No exceptions. No "hoping it comes back." This is the hard stop.</td></tr>
+      <tr><td class="r">Stock closes below your stop level (1.5×ATR from entry)</td><td>Close — technical invalidation. The setup no longer exists.</td></tr>
+      <tr><td class="g">Option gains 100% (2× entry price)</td><td>Close at least 50%. Let the other 50% run with stop moved to break-even.</td></tr>
+      <tr><td class="y">5 DTE remaining with open position</td><td>Close everything. Theta decay becomes brutal in the final week.</td></tr>
+      <tr><td>14 DTE from entry</td><td>If neither stop nor target hit — evaluate. Close if thesis changed, or hold if trend still intact with DTE &gt; 7.</td></tr>
+    </tbody>
+  </table>
+  <p>After closing: update the Journal tab with exit price and outcome.</p>
+</div>
+
+<!-- TIMING -->
+<div class="section-wrap">
+  <div class="section-ghost">02</div>
+  <div class="section-label">Data</div>
+  <div class="section-title">Timing Intelligence</div>
+</div>
+
+<p>Based on the 18-month backtest (331 trades, Jan 2024 – May 2025). Use as context, not a trading rule — sample sizes per bucket are small.</p>
+
+<div class="timing-grid">
+  <div class="timing-box">
+    <div class="timing-label">Day of Week — All Trades</div>
+    <table>
+      <thead><tr><th>Day</th><th>WR</th><th>Avg P&L</th></tr></thead>
+      <tbody>
+        <tr><td class="g">Mon</td><td class="g">30%</td><td class="g">+$98</td></tr>
+        <tr><td class="g">Tue</td><td>29%</td><td>+$46</td></tr>
+        <tr><td>Wed</td><td>29%</td><td>+$15</td></tr>
+        <tr><td class="r">Thu</td><td class="r">22%</td><td class="r">−$248</td></tr>
+        <tr><td class="r">Fri</td><td class="r">26%</td><td>+$32</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text3);margin-top:6px">Thursday signals had the worst WR and only day with negative avg P&L. Signals fire evenly (~19-22%) across all days — no clustering.</p>
+  </div>
+
+  <div class="timing-box">
+    <div class="timing-label">Month — All Trades</div>
+    <table>
+      <thead><tr><th>Month</th><th>WR</th><th>Avg P&L</th></tr></thead>
+      <tbody>
+        <tr><td class="g">Jan</td><td class="g">42%</td><td class="g">+$169</td></tr>
+        <tr><td class="g">Feb</td><td class="g">36%</td><td class="r">−$54</td></tr>
+        <tr><td class="r">Mar</td><td class="r">11%</td><td class="r">−$407</td></tr>
+        <tr><td class="r">Apr</td><td class="r">5%</td><td class="r">−$644</td></tr>
+        <tr><td class="g">Jun</td><td class="g">43%</td><td class="g">+$248</td></tr>
+        <tr><td class="r">Jul</td><td class="r">12%</td><td class="r">−$433</td></tr>
+        <tr><td class="r">Aug</td><td class="r">0%</td><td class="r">−$590</td></tr>
+        <tr><td class="r">Oct</td><td class="r">0%</td><td class="r">−$828</td></tr>
+        <tr><td class="g">Nov</td><td class="g">67%</td><td class="g">+$3,294</td></tr>
+        <tr><td class="g">Dec</td><td class="g">29%</td><td class="g">+$289</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="callout callout-red">
+  <div class="callout-hd">The March–April / July–August Problem</div>
+  Four months in the backtest produced near-zero win rates: March 2024 (rate panic), April 2024 (Middle East tensions), July 2024 (post-earnings rotation), August 2024 (Japan yen carry trade unwind, VIX spiked to 65). These are <strong>macro regime changes</strong> — the kind of move where every indicator looks bullish right up until the market collapses 10%+ in days. <br><br>
+  The tool's macro filter (SPY BEAR = no calls) catches some of these — but not all, especially at the start of a regime shift. During these periods: reduce size by 50%, tighten stops to 35% instead of 50%, and when in doubt, sit out.
+</div>
+
+<div class="callout callout-blue" style="margin-top:0">
+  <div class="callout-hd">When Signals Are Most Likely to Fire</div>
+  Signals cluster on days after a 1–3% single-day pullback in a bull trend — the RSI cools from overbought, HV Rank can spike if the move was sharp, and the EMA crossover signal sometimes refreshes. Monday/Tuesday after a Friday pullback is a historically productive signal window. The best signal days are NOT the days the stock is running — they are the days after a brief dip in an ongoing uptrend.
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="section-wrap">
+  <div class="section-ghost">03</div>
+  <div class="section-label">Reference</div>
+  <div class="section-title">Quick Reference — Trade Decision Tree</div>
+</div>
+
+<div class="card">
+  <p style="margin-bottom:14px"><strong>Swing scanner (14-day trades):</strong></p>
+  <ol style="margin:0;padding-left:22px">
+    <li><span class="g"><strong>VIX check:</strong></span> &gt; 30? Use spreads only. &gt; 40? Paper trade only.</li>
+    <li><span class="g"><strong>SPY check:</strong></span> BULL → CALL setups. BEAR → switch to 07 PUTS or 0DTE PUT only.</li>
+    <li><span class="g"><strong>Scanner:</strong></span> Any ticker ≥ 65? If no → no trade today. If yes → Analyze.</li>
+    <li><span class="g"><strong>✓0DTE badge:</strong></span> Present? Highest conviction — stock + market direction aligned.</li>
+    <li><span class="g"><strong>Analyze checklist:</strong></span> 4–5/5 passes? Trade. 3/5? Half size. &lt; 3? Skip.</li>
+    <li><span class="g"><strong>HV Rank:</strong></span> &lt; 40 (not NVDA)? Hard skip — stock not moving enough.</li>
+    <li><span class="g"><strong>Trend Age:</strong></span> &gt; 20 days since crossover? Wait for a fresh setup.</li>
+    <li><span class="g"><strong>Selector ★ row:</strong></span> Break-even &lt; 1.5×ATR? Proceed. &gt; 2×ATR? Move strike.</li>
+    <li><span class="g"><strong>Bid/Ask spread:</strong></span> &gt; 10%? Move closer to ATM. &gt; 20%? Skip.</li>
+    <li><span class="g"><strong>Execute:</strong></span> Limit at mid-price. 1–2 contracts max per risk settings.</li>
+    <li><span class="g"><strong>Exit rules:</strong></span> −50% = close. +100% = close half. 5 DTE = close all.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <p style="margin-bottom:14px"><strong>0DTE ORB (same-day trades, VIX 18–35):</strong></p>
+  <ol style="margin:0;padding-left:22px">
+    <li><span class="g"><strong>Pre-market:</strong></span> Set direction filter (PUT only if SPY BEAR, CALL only if SPY BULL).</li>
+    <li><span class="g"><strong>9:45 AM:</strong></span> Check signal card. GO → enter within 15 min. NO-GO → skip the day.</li>
+    <li><span class="g"><strong>Entry:</strong></span> Limit order at Δ0.35 strike shown in trade card. Verify at broker.</li>
+    <li><span class="g"><strong>Exit:</strong></span> T1 1.5× / stop −30% / 60-min time stop / 2:30 PM hard close — whichever comes first.</li>
+    <li><span class="g"><strong>Log it:</strong></span> Click + Log Trade in Paper Trade Log immediately after entry.</li>
+  </ol>
+</div>
+
+<!-- 0DTE WORKFLOW -->
+<div class="section-wrap">
+  <div class="section-ghost">04</div>
+  <div class="section-label">0DTE System</div>
+  <div class="section-title">0DTE ORB Workflow (06 0DTE Tab)</div>
+</div>
+
+<p>This is a parallel system to the swing scanner — trade it independently. Use when VIX is 18–35 and you want a same-day directional play on SPY, QQQ, or IWM.</p>
+
+<div class="step-card">
+  <div class="step-num">0DTE Step 01</div>
+  <div class="step-title">Read the Pre-Market Brief &amp; Set Direction Filter (Before 9:30 AM)</div>
+  <p>Open the 06 0DTE tab before the market opens. The <strong>pre-market brief panel</strong> auto-shows (disappears at 9:30 AM). It shows ES=F and NQ=F futures direction, VIX level, implied market move for the session, and any Signal Intel from overnight. Use this to decide your direction bias before the OR forms.</p>
+  <p>Then select the direction filter next to the symbol bar:</p>
+  <table>
+    <thead><tr><th>Market Context</th><th>Set Filter To</th></tr></thead>
+    <tbody>
+      <tr><td class="r">SPY BEARISH (below 20-day SMA)</td><td class="r">PUT only ↓</td></tr>
+      <tr><td class="g">SPY BULLISH (above 20-day SMA)</td><td class="g">CALL only ↑</td></tr>
+      <tr><td>Unclear / researching</td><td>Both Directions</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="step-card">
+  <div class="step-num">0DTE Step 02</div>
+  <div class="step-title">Watch the Signal Card (9:45 AM – 11:00 AM ET)</div>
+  <p>After 9:45 AM the OR is locked. Check the <strong>key levels bar</strong> (Prev Close, Open, Day H/L) for context — is price above yesterday's close? Holding above the open? This anchors your read before looking at the signal.</p>
+  <p>The symbol cards show live status:</p>
+  <table>
+    <thead><tr><th>Card Badge</th><th>Meaning</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="g">● GO</td><td>OR broken with volume confirmation; VIX in range (18–35)</td><td>Enter in breakout direction if filter matches</td></tr>
+      <tr><td class="y">⚠ WAIT</td><td>OR broken but volume too low to confirm</td><td>Hold — signal may strengthen in next 5-min bar</td></tr>
+      <tr><td class="dim">OR</td><td>Price inside the opening range</td><td>Do not trade — wait for a breakout</td></tr>
+    </tbody>
+  </table>
+  <p>When a card shows <span class="g">● GO</span>, tap it to make it active. The <strong>trade card</strong> below shows: Strike (Δ0.35), Entry premium, Delta, Theta/hr, OR position bar, Stop/T1/T2 exit cards with $ P&amp;L per contract, and exit mode (RUNNER / NORMAL / SCALP). Check the OR countdown in the header — trades after 11 AM use NORMAL or SCALP mode, not RUNNER.</p>
+</div>
+
+<div class="step-card">
+  <div class="step-num">0DTE Step 03</div>
+  <div class="step-title">Execute — Entry Rules</div>
+  <ul>
+    <li>Enter at or near the estimated entry premium shown in the trade card. Verify at your broker.</li>
+    <li>Use a limit order only — 0DTE spreads can be wide at fast-moving moments.</li>
+    <li><strong>RUNNER mode</strong> (before 11 AM + VIX≥22): sell 50% at 2× premium, trail 50% to 2.5×</li>
+    <li><strong>NORMAL mode</strong> (before 1:15 PM): sell at 1.5× premium</li>
+    <li><strong>SCALP mode</strong> (after 1:15 PM): sell 100% at 1.5×, no trailing — theta is too expensive to hold</li>
+    <li>Check <strong>Theta/hr</strong> in the trade card. If theta exceeds $15/hr (red), your window to profit is short — enter only on clear momentum, not marginal breakouts.</li>
+  </ul>
+  <p><strong>Immediately after filling:</strong> tap <strong>📡 Track Live</strong> in the trade card. This one tap pre-fills the Active Trade Tracker with the symbol, direction, strike, and your fill price — no manual typing. Enter actual contracts in the tracker, then click ➕ Add Trade.</p>
+  <p>Tap <strong>🔔 Enable Alerts</strong> in the tracker header if you haven't already. This arms browser notifications + ntfy for automatic stop/target alerts — you won't need to watch the screen.</p>
+</div>
+
+<div class="step-card">
+  <div class="step-num">0DTE Step 04</div>
+  <div class="step-title">Exit Rules — All Must Be Respected</div>
+  <p>If you have exit alerts enabled, the tracker fires a push notification automatically when each level is hit. You still need to execute the exit at your broker.</p>
+  <table>
+    <thead><tr><th>Condition</th><th>Tracker Alert</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="r">Premium drops to 50% of fill (Stop)</td><td class="r">🔴 STOP HIT via browser + ntfy</td><td>Close immediately. No exceptions.</td></tr>
+      <tr><td class="g">Premium reaches 150% of fill (T1)</td><td class="g">🟢 TARGET 1 HIT via browser + ntfy</td><td>Close all (NORMAL/SCALP) or 50% (RUNNER)</td></tr>
+      <tr><td class="g">Premium reaches 250% of fill (T2)</td><td class="g">🟢 TARGET 2 HIT via browser + ntfy</td><td>Close remaining 50% (RUNNER only)</td></tr>
+      <tr><td class="y">60 minutes since entry, T1 not hit</td><td class="dim">No alert — manual check</td><td>Close. Time stop prevents slow bleeds.</td></tr>
+      <tr><td class="r">2:30 PM ET — position still open</td><td class="dim">No alert — set a phone alarm</td><td>Close everything. Hard exit rule.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="step-card">
+  <div class="step-num">0DTE Step 05</div>
+  <div class="step-title">Log the Trade (Build Forward Data)</div>
+  <p>There are two logging paths — use both:</p>
+  <ul>
+    <li><strong>📡 Track Live</strong> (in the trade card) → Active Trade Tracker. Use this for real-time P&amp;L monitoring during the trade. When the trade closes, remove it from the tracker via the ✕ button.</li>
+    <li><strong>📝 Backtest Log</strong> (in the trade card) → Paper Trade Log. Saves the signal for statistical analysis. After the trade, find it in the log and enter the exit premium + hold time to complete the record.</li>
+  </ul>
+  <p>The Paper Trade Log builds running stats: WR, PF, total forward P&amp;L per contract. After 20+ entries this becomes your actual edge measurement — more reliable than the 4-trade backtest sample.</p>
+</div>
+
+<!-- PAPER TRADING -->
+<div class="section-wrap">
+  <div class="section-ghost">05</div>
+  <div class="section-label">Protocol</div>
+  <div class="section-title">Paper Trading Protocol</div>
+</div>
+
+<p>Before risking real capital, complete 20–30 paper trades and compare against these backtest benchmarks:</p>
+
+<table>
+  <thead><tr><th>Milestone</th><th>Min Trades</th><th>Target Win Rate</th><th>Go-Live Threshold</th></tr></thead>
+  <tbody>
+    <tr><td>Early signal</td><td>10</td><td>50–70%</td><td>≥ 5 wins, no 3-loss streak</td></tr>
+    <tr><td>Confirmation</td><td>20</td><td>55–72%</td><td>PF &gt; 1.0</td></tr>
+    <tr><td class="g">Go-live threshold</td><td>30</td><td>≥ 55%</td><td><strong>PF ≥ 1.3 and no degradation</strong></td></tr>
+  </tbody>
+</table>
+
+<p>Best starting tickers: <span class="g">TSLA calls</span> (score ≥ 76, SPY bull) and <span class="g">META calls</span> (score ≥ 65, SPY bull). These had the cleanest edge in the 18-month backtest. Avoid puts until you have 30+ call trades logged.</p>
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <div class="site-footer-inner">
+    ChopRead · sift the chop<br>
+    <a href="changelog.html">View Changelog</a>
+    <div class="disclaimer">This document is for educational and informational purposes only. Options trading involves substantial risk of loss and is not appropriate for all investors. Nothing in this document constitutes investment advice. Past backtest performance is not indicative of future results. Always consult a licensed financial professional before making investment decisions. Size every trade to your actual tolerable maximum loss.</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

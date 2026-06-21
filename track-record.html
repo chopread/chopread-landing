@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track Record — ChopRead</title>
+<meta name="description" content="The receipts. Real broker-verified trades (wins and losses) plus the live signals the tool called — every one chart-verifiable.">
+<meta property="og:title" content="ChopRead — The Receipts">
+<meta property="og:description" content="Broker-verified trades and the live signals the tool called. Wins and losses, all checkable on a chart.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06080d; --surface:#0c0f18; --surface2:#11161f; --border:#1a2030; --border2:#232b3e;
+    --text:#c8d0e0; --text2:#8896b0; --text3:#4a5568; --white:#f0f4ff;
+    --teal:#C2790A; --green:#34d399; --red:#f0616d; --gold:#e8c35a;
+    --mono:'Courier New',ui-monospace,monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(900px 620px at 82% -12%, rgba(232,195,90,.07), transparent 55%),
+      radial-gradient(820px 700px at -12% 22%, rgba(194,121,10,.08), transparent 55%),
+      radial-gradient(900px 800px at 50% 118%, rgba(52,211,153,.06), transparent 55%),
+      var(--bg);
+    background-attachment:fixed}
+  a{color:var(--teal);text-decoration:none}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+
+  nav{background:rgba(12,15,24,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
+    height:56px;position:sticky;top:0;z-index:10}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .nav-brand{font-size:15px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+  .nav-brand span{color:var(--teal)}
+  .nav-links{display:flex;gap:4px;list-style:none}
+  .nav-links a{font-size:13px;font-weight:500;color:var(--text2);padding:6px 12px;border-radius:6px;transition:.15s}
+  .nav-links a:hover{color:var(--white);background:var(--border)}
+  .nav-links a.cta{background:linear-gradient(135deg,var(--green),var(--teal));color:#201400;font-weight:700}
+
+  header.hero{padding:60px 0 36px;border-bottom:1px solid var(--border)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+  h1{font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1.1;color:var(--white);margin-bottom:16px}
+  h1 .hl{background:linear-gradient(120deg,var(--green),var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .story{font-size:16px;color:var(--text2);max-width:680px}
+  .story b{color:var(--white)}
+
+  .toplaw{margin-top:22px;font-size:11.5px;color:var(--text3);font-family:var(--mono);line-height:1.7}
+
+  section{padding:44px 0;border-bottom:1px solid var(--border)}
+  .sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  h2{font-size:24px;font-weight:800;color:var(--white);letter-spacing:-.02em}
+  .sec-sub{font-size:13.5px;color:var(--text2);margin-bottom:22px}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+  .tag.real{color:var(--green);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25)}
+  .tag.sig{color:var(--gold);background:rgba(232,195,90,.1);border:1px solid rgba(232,195,90,.25)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px}
+  @media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--surface);padding:20px 14px;text-align:center}
+  .stat .v{font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.02em}
+  .stat .v.g{color:var(--green)} .stat .v.r{color:var(--red)}
+  .stat .l{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-top:5px}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:680px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+  .card:hover{border-color:var(--border2)}
+  .card .row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .card .sym{font-weight:800;color:var(--white);font-size:15px}
+  .card .sym small{color:var(--text2);font-weight:500}
+  .pill{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}
+  .pill.win{color:var(--green);background:rgba(52,211,153,.12)}
+  .pill.loss{color:var(--red);background:rgba(240,97,109,.12)}
+  .pill.flag{color:var(--gold);background:rgba(232,195,90,.12)}
+  .card .pnl{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .card .pnl.g{color:var(--green)} .card .pnl.r{color:var(--red)}
+  .card .meta{font-family:var(--mono);font-size:11.5px;color:var(--text2)}
+  .card .meta.sig{color:var(--teal)}
+  .card .thumbs{display:flex;gap:6px;flex-wrap:wrap}
+  .card .thumbs a{display:block;width:54px;height:54px;border-radius:7px;overflow:hidden;border:1px solid var(--border2);background:var(--surface2);cursor:zoom-in;transition:transform .12s,border-color .12s}
+  .card .thumbs a:hover{transform:scale(1.06);border-color:var(--teal)}
+  #lb{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(4,6,10,.93);backdrop-filter:blur(6px);padding:24px;cursor:zoom-out}
+  #lb.show{display:flex}
+  #lb img{max-width:100%;max-height:90vh;border-radius:12px;border:1px solid var(--border2);box-shadow:0 30px 90px rgba(0,0,0,.6)}
+  #lb .x{position:absolute;top:18px;right:22px;color:var(--text2);font-size:26px;font-family:var(--mono);cursor:pointer}
+  .card .thumbs img{width:100%;height:100%;object-fit:cover}
+  .card .verify{font-size:11px;color:var(--text3)}
+  .card .verify a{color:var(--teal)}
+
+  .loading{color:var(--text3);font-family:var(--mono);font-size:13px;padding:20px 0}
+
+  .disclaimer{font-size:11.5px;color:var(--text3);font-family:var(--mono);line-height:1.8;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .disclaimer b{color:var(--gold)}
+  footer{padding:34px 0;text-align:center;color:var(--text3);font-size:12px;font-family:var(--mono)}
+  footer a{color:var(--text2)}
+  .cta-band{text-align:center;padding:40px 0}
+  .btn{display:inline-block;font-weight:700;font-size:15px;padding:15px 30px;border-radius:11px;background:linear-gradient(135deg,var(--green),var(--teal));color:#201400}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a href="https://app.chopread.com" class="nav-brand">Chop<span>Read</span></a>
+  <ul class="nav-links">
+    <li><a href="https://app.chopread.com">Tools</a></li>
+    <li><a href="track-record.html">Track Record</a></li>
+    <li><a href="index.html" class="cta">Pro</a></li>
+  </ul>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">The receipts</div>
+  <h1>Wins, losses, and the calls — <span class="hl">all verifiable.</span></h1>
+  <p class="story">I got wiped to zero. The tool kept flagging monster setups I couldn't take.
+  Scraped together <b>~$2,000</b>, went live — and started trading them for real.
+  Below is <b>everything</b>: the signals it called <em>and</em> the trades I actually took.
+  Wins and losses. Every one checkable on a chart.</p>
+  <div class="toplaw">Educational only · not financial advice · trading options carries substantial risk of loss · past results do not predict future results</div>
+</div></header>
+
+<!-- EXECUTED -->
+<section><div class="wrap">
+  <div class="sec-head"><h2>Trades I actually took</h2><span class="tag real">Real money · broker-verified</span></div>
+  <div class="sec-sub">Real fills from my broker — wins <b>and</b> losses. Tap any screenshot to enlarge.</div>
+  <div id="exec-stats" class="stats"></div>
+  <div id="exec-cards" class="cards"><div class="loading">Loading verified trades…</div></div>
+</div></section>
+
+<!-- SIGNALS -->
+<section><div class="wrap">
+  <div class="sec-head"><h2>Signals the tool called</h2><span class="tag sig">Flagged live · not executed</span></div>
+  <div class="sec-sub">Ideas the scanner surfaced in real time and I tracked on my watchlist. <b>I did not trade these</b>
+  (no capital at the time) — this is what each contract <em>did</em>, i.e. signal performance, not money I made.</div>
+  <div id="sig-cards" class="cards"><div class="loading">Loading signals…</div></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="disclaimer">
+    <b>⚠ Important.</b> ChopRead is an educational tool, not financial, investment, or trading advice, and
+    not a recommendation to buy or sell any security. <b>"Trades I actually took"</b> are real broker-executed
+    results; they are past performance and <b>do not predict future results</b>. <b>"Signals the tool called"</b>
+    were flagged in real time but <b>were not executed</b> — they are hypothetical/illustrative signal performance,
+    assume entry at the flag, and have inherent limitations (hypothetical results often differ from real trading).
+    Trading options involves substantial risk of loss; you can lose your entire investment. You are solely
+    responsible for your own decisions.
+  </div>
+</div></section>
+
+<div class="cta-band"><div class="wrap">
+  <a class="btn" href="index.html">See what you get →</a>
+</div></div>
+
+<footer><div class="wrap">
+  © <span id="yr"></span> ChopRead ·
+  <a href="https://app.chopread.com">App</a> · <a href="index.html">Pro</a> · <a href="privacy.html">Privacy &amp; Terms</a>
+</div></footer>
+
+<div id="lb"><span class="x">✕</span><img alt="trade proof"></div>
+
+<!-- Data inlined so there is no open /data/*.json endpoint to scrape. -->
+<script type="application/json" id="exec-data">
+{
+  "trades": [
+    { "date": "2026-06-18", "time": "12:52", "sym": "SPY",  "dir": "CALL", "strike": 751,  "expiry": "2026-06-18", "contracts": 50, "in": 0.05, "out": 0.072, "pnlPct": 44.0,   "pnlUsd": 110,  "result": "WIN",  "signal": "SPY call sweep alert — bullish options flow (6/18)", "proof": ["proof/2026-06-18_SPY_buy_1252.jpeg","proof/2026-06-18_SPY_sell30_1305.jpeg","proof/2026-06-18_SPY_sell20_1303.jpeg"] },
+    { "date": "2026-06-18", "time": null,    "sym": "QQQ",  "dir": "CALL", "strike": 741,  "expiry": "2026-06-18", "contracts": 5,  "in": 0.90, "out": 0.63,  "pnlPct": -30.0,  "pnlUsd": -135, "result": "LOSS", "signal": "0DTE tab suggestion — QQQ call (6/18)", "proof": ["proof/2026-06-18_QQQ_741C_loss.png"] },
+    { "date": "2026-06-17", "time": null,    "sym": "SPXW", "dir": "CALL", "strike": 7430, "expiry": "2026-06-18", "contracts": 1,  "in": 35.0, "out": 69.0,  "pnlPct": 97.15,  "pnlUsd": 3400, "result": "WIN",  "signal": "0DTE tab suggestion — SPX call (6/17)", "proof": ["proof/2026-06-17_SPXW_7430C_win.png"] },
+    { "date": "2026-06-17", "time": null,    "sym": "SPXW", "dir": "PUT",  "strike": 7445, "expiry": "2026-06-17", "contracts": 1,  "in": 1.80, "out": 8.00,  "pnlPct": 344.45, "pnlUsd": 620,  "result": "WIN",  "signal": "0DTE tab suggestion — SPX put (6/17)", "proof": ["proof/2026-06-17_SPXW_7445P_win.png"] },
+    { "date": "2026-06-17", "time": null,    "sym": "SPXW", "dir": "PUT",  "strike": 7445, "expiry": "2026-06-17", "contracts": 1,  "in": 1.80, "out": 4.00,  "pnlPct": 122.23, "pnlUsd": 220,  "result": "WIN",  "signal": "0DTE tab suggestion — SPX put (6/17)", "proof": ["proof/2026-06-17_SPXW_7445P_win2.png"] },
+    { "date": "2026-06-17", "time": null,    "sym": "SPXW", "dir": "PUT",  "strike": 7415, "expiry": "2026-06-17", "contracts": 1,  "in": 5.90, "out": 12.0,  "pnlPct": 103.39, "pnlUsd": 610,  "result": "WIN",  "signal": "0DTE tab suggestion — SPX put (6/17)", "proof": ["proof/2026-06-17_SPXW_7415P_win.png"] },
+    { "date": "2026-06-16", "time": null,    "sym": "QQQ",  "dir": "PUT",  "strike": 734,  "expiry": "2026-06-16", "contracts": 1,  "in": 0.87, "out": 1.25,  "pnlPct": 43.68,  "pnlUsd": 38,   "result": "WIN",  "signal": "0DTE tab suggestion — QQQ put (6/16)", "proof": ["proof/2026-06-16_QQQ_734P_win.png"] }
+  ]
+}
+</script>
+<script type="application/json" id="sig-data">
+{
+  "ideas": [
+    { "sym": "QQQ",  "dir": "CALL", "strike": 704,  "expiry": "2026-06-11", "addedFromSignal": "2026-06-11", "observedPct": 581, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png","proof/signals/2026-06-11_watchlist_b.png"] },
+    { "sym": "SPY",  "dir": "CALL", "strike": 735,  "expiry": "2026-06-11", "addedFromSignal": "2026-06-11", "observedPct": 432, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "SPXW", "dir": "CALL", "strike": 7355, "expiry": "2026-06-11", "addedFromSignal": "2026-06-11", "observedPct": 171, "observedUsd": 3140, "executed": false, "proof": ["proof/signals/2026-06-11_SPXW_7355C_detail.png","proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "SPXW", "dir": "CALL", "strike": 7415, "expiry": "2026-06-11", "addedFromSignal": "2026-06-11", "observedPct": 3.5, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "ENPH", "dir": "CALL", "strike": 55,   "expiry": "2026-06-18", "addedFromSignal": null, "observedPct": 57, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "ENPH", "dir": "CALL", "strike": 53,   "expiry": "2026-06-18", "addedFromSignal": null, "observedPct": 25.6, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "HIMX", "dir": "CALL", "strike": 17,   "expiry": "2026-06-18", "addedFromSignal": null, "observedPct": 47.8, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] },
+    { "sym": "TSLA", "dir": "CALL", "strike": 395,  "expiry": "2026-07-02", "addedFromSignal": null, "observedPct": 8.5, "executed": false, "proof": ["proof/signals/2026-06-11_watchlist_a.png"] }
+  ]
+}
+</script>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+// lightbox for proof screenshots
+(function(){var lb=document.getElementById('lb');
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('.thumbs a');
+    if(a){e.preventDefault();lb.querySelector('img').src=a.getAttribute('href');lb.classList.add('show');}
+    else if(e.target===lb||e.target.classList.contains('x')){lb.classList.remove('show');}
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('show');});
+})();
+var fmtUsd=function(n){var s=n<0?'-':'+';return s+'$'+Math.abs(n).toLocaleString('en-US');};
+function tvLink(sym){var s=(sym==='SPXW'||sym==='SPX')?'SP:SPX':sym;return 'https://www.tradingview.com/chart/?symbol='+encodeURIComponent(s);}
+function thumbs(arr){return (arr||[]).map(function(p){return '<a href="'+p+'" target="_blank" rel="noopener"><img loading="lazy" src="'+p+'" alt="proof"></a>';}).join('');}
+
+// ── Executed trades ──
+(function(){var d=JSON.parse(document.getElementById('exec-data').textContent);
+  var t=d.trades||[];
+  var wins=t.filter(function(x){return x.result==='WIN';}).length;
+  var losses=t.filter(function(x){return x.result==='LOSS';}).length;
+  var net=t.reduce(function(a,x){return a+(x.pnlUsd||0);},0);
+  var wr=t.length?Math.round(100*wins/t.length):0;
+  document.getElementById('exec-stats').innerHTML=
+    '<div class="stat"><div class="v">'+t.length+'</div><div class="l">Trades</div></div>'+
+    '<div class="stat"><div class="v g">'+wins+'–'+losses+'</div><div class="l">W – L</div></div>'+
+    '<div class="stat"><div class="v">'+wr+'%</div><div class="l">Win rate</div></div>'+
+    '<div class="stat"><div class="v '+(net>=0?'g':'r')+'">'+fmtUsd(net)+'</div><div class="l">Net realized</div></div>';
+  document.getElementById('exec-cards').innerHTML=t.map(function(x){
+    var win=x.result==='WIN';
+    var ct=x.contracts?(' ×'+x.contracts):'';
+    return '<div class="card">'+
+      '<div class="row1"><span class="sym">'+x.sym+' <small>$'+x.strike+' '+x.dir+ct+'</small></span>'+
+      '<span class="pill '+(win?'win':'loss')+'">'+x.result+'</span></div>'+
+      '<div class="pnl '+(win?'g':'r')+'">'+fmtUsd(x.pnlUsd)+' <span style="font-size:13px;opacity:.8">('+(x.pnlPct>0?'+':'')+x.pnlPct+'%)</span></div>'+
+      '<div class="meta">'+x.date+(x.time?' · '+x.time+' ET':'')+' · in $'+x.in+' → out $'+x.out+'</div>'+
+      (x.signal?'<div class="meta sig">📡 Signal: '+x.signal+'</div>':'')+
+      (x.proof&&x.proof.length?'<div class="thumbs">'+thumbs(x.proof)+'</div>':'')+
+      '<div class="verify">Verify: open <a href="'+tvLink(x.sym)+'" target="_blank" rel="noopener">'+x.sym+'</a> at '+x.date+(x.time?' '+x.time+' ET':'')+'</div>'+
+    '</div>';
+  }).join('');
+})();
+
+// ── Signals ──
+(function(){var d=JSON.parse(document.getElementById('sig-data').textContent);
+  var ideas=(d.ideas||[]).slice().sort(function(a,b){return (b.observedPct||0)-(a.observedPct||0);});
+  document.getElementById('sig-cards').innerHTML=ideas.map(function(x){
+    return '<div class="card">'+
+      '<div class="row1"><span class="sym">'+x.sym+' <small>$'+x.strike+' '+x.dir+'</small></span>'+
+      '<span class="pill flag">FLAGGED LIVE</span></div>'+
+      '<div class="pnl g">+'+x.observedPct+'%'+(x.observedUsd?' <span style="font-size:13px;opacity:.8">(+$'+x.observedUsd.toLocaleString('en-US')+')</span>':'')+'</div>'+
+      '<div class="meta">flagged '+(x.addedFromSignal||x.expiry)+' · not executed</div>'+
+      (x.proof&&x.proof.length?'<div class="thumbs">'+thumbs(x.proof)+'</div>':'')+
+      '<div class="verify">Verify: open <a href="'+tvLink(x.sym)+'" target="_blank" rel="noopener">'+x.sym+'</a> at '+(x.addedFromSignal||x.expiry)+'</div>'+
+    '</div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

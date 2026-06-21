@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChopRead — 0DTE Workflow Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080d;
+  --surface:#0c0f18;
+  --surface2:#10141f;
+  --border:#1a2030;
+  --border2:#232b3e;
+  --text:#c8d0e0;
+  --text2:#8896b0;
+  --text3:#4a5568;
+  --white:#f0f4ff;
+  --teal:#C2790A;
+  --teal2:#1ab8a0;
+  --teal-dim:rgba(194,121,10,.12);
+  --teal-glow:rgba(194,121,10,.06);
+  --green:#34d399;
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --purple:#a78bfa;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.7;overflow-x:hidden}
+a{color:var(--teal);text-decoration:none;transition:color .2s}
+a:hover{color:#7de8d8}
+strong{color:var(--white);font-weight:600}
+p{color:var(--text);margin-bottom:12px}
+ul,ol{padding-left:20px;margin-bottom:14px}
+li{margin-bottom:7px;color:var(--text)}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(6,8,13,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:0}
+.nav-brand{color:var(--white);font-size:15px;font-weight:800;letter-spacing:-.5px;padding:14px 0;margin-right:32px;flex-shrink:0}
+.nav-brand span{color:var(--teal)}
+.nav-links{display:flex;gap:2px;overflow-x:auto;flex:1}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--text3);font-size:11px;font-weight:500;letter-spacing:.5px;padding:14px 12px;white-space:nowrap;transition:color .2s;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--text)}
+.nav-right{margin-left:auto;padding-left:20px;flex-shrink:0}
+.nav-right a{color:var(--text3);font-size:11px}
+.nav-right a:hover{color:var(--teal)}
+
+/* ── HERO ── */
+.hero{position:relative;padding:80px 32px 60px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(194,121,10,.07) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.25;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 80%)}
+.hero-content{position:relative;z-index:1;max-width:1000px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(194,121,10,.08);border:1px solid rgba(194,121,10,.2);border-radius:100px;padding:5px 16px;font-size:11px;font-weight:500;letter-spacing:.5px;color:var(--teal);margin-bottom:24px}
+.hero-badge-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;line-height:1.1;letter-spacing:-2px;color:var(--white);margin-bottom:12px}
+.hero h1 .accent{background:linear-gradient(135deg,var(--teal) 0%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:var(--text2);margin-bottom:0;letter-spacing:-.2px}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:220px 1fr;gap:40px;max-width:1100px;margin:0 auto;padding:40px 32px 120px;align-items:start}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+
+/* ── SIDEBAR TOC ── */
+.sidebar{position:sticky;top:68px}
+.toc{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px}
+.toc-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.toc-section-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:14px 0 6px;opacity:.6}
+.toc a{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:11px;font-weight:500;padding:5px 0;border-bottom:1px solid var(--border);transition:color .2s}
+.toc a:last-child{border-bottom:none}
+.toc a:hover{color:var(--teal)}
+.toc a::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:background .2s}
+.toc a:hover::before{background:var(--teal)}
+
+/* ── SECTION HEADERS ── */
+.section-header{margin:60px 0 28px;position:relative}
+.section-header:first-child{margin-top:0}
+.section-num{font-size:72px;font-weight:900;color:rgba(194,121,10,.04);position:absolute;top:-24px;left:-8px;line-height:1;letter-spacing:-4px;pointer-events:none;user-select:none}
+.section-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.section-title{font-size:22px;font-weight:700;color:var(--white);letter-spacing:-0.5px;line-height:1.2}
+
+/* ── PHASE BANNERS ── */
+.phase{border-radius:10px;padding:16px 20px;margin:28px 0 18px;display:flex;align-items:center;gap:14px;background:rgba(194,121,10,.06);border:1px solid rgba(194,121,10,.18)}
+.phase-tag{background:rgba(194,121,10,.12);border:1px solid rgba(194,121,10,.25);color:var(--teal);font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 12px;text-transform:uppercase;flex-shrink:0;white-space:nowrap;border-radius:6px}
+.phase-title{color:var(--white);font-size:14px;font-weight:600;letter-spacing:-.2px}
+.phase-time{color:var(--text3);font-size:11px;margin-top:2px}
+
+/* ── STEP CARDS ── */
+.step{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;margin-bottom:12px;transition:border-color .2s}
+.step:hover{border-color:rgba(194,121,10,.15)}
+.step-num{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.step-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:14px;letter-spacing:-.3px}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:10px;padding:18px 22px;margin:20px 0;font-size:13px;line-height:1.7;border:1px solid}
+.callout-green{background:rgba(52,211,153,.06);border-color:rgba(52,211,153,.2)}
+.callout-blue{background:rgba(194,121,10,.06);border-color:rgba(194,121,10,.2)}
+.callout-yellow{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)}
+.callout-red{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.2)}
+.callout-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.callout-green .callout-label{color:var(--green)}
+.callout-blue .callout-label{color:var(--teal)}
+.callout-yellow .callout-label{color:var(--yellow)}
+.callout-red .callout-label{color:var(--red)}
+
+/* ── TABLES ── */
+table{border-collapse:collapse;width:100%;font-size:12px;margin:14px 0 18px}
+th{border-bottom:1px solid var(--border2);color:var(--text3);font-size:10px;font-weight:600;letter-spacing:1.5px;padding:9px 14px;text-align:left;text-transform:uppercase;background:var(--surface)}
+td{border-bottom:1px solid var(--border);padding:10px 14px;vertical-align:top;color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.01)}
+.td-key{color:var(--white);font-weight:600}
+
+/* ── PILLS ── */
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:600;letter-spacing:.5px;margin-right:4px;margin-bottom:3px}
+.pill-green{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--green)}
+.pill-red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:var(--red)}
+.pill-yellow{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);color:var(--yellow)}
+.pill-cyan{background:rgba(194,121,10,.1);border:1px solid rgba(194,121,10,.2);color:var(--teal)}
+.pill-dim{background:rgba(74,85,104,.1);border:1px solid rgba(74,85,104,.2);color:var(--text3)}
+
+/* ── SCREENSHOT PLACEHOLDERS ── */
+.screenshot{background:var(--surface2);border:1px dashed var(--border2);border-radius:10px;padding:32px 24px;margin:16px 0;text-align:center;color:var(--text3);font-size:11px;font-weight:500;letter-spacing:.5px}
+.screenshot-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-top:8px;opacity:.6}
+
+/* ── GEX COMPARE CARDS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+
+/* ── SCORE ZONES ── */
+.score-zone{display:flex;gap:3px;margin:14px 0}
+.sz{flex:1;padding:14px 10px;text-align:center;border-radius:8px}
+.sz-val{font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:4px}
+.sz-label{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+
+/* ── CHECKLIST ── */
+.ck{list-style:none;padding:0;margin:12px 0}
+.ck li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.ck li:last-child{border-bottom:none}
+.ck-box{width:16px;height:16px;border:1px solid var(--border2);border-radius:4px;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--green);background:rgba(52,211,153,.08)}
+
+/* ── TIMELINE ── */
+.roadmap{position:relative;margin:20px 0}
+.roadmap::before{content:'';position:absolute;left:18px;top:24px;bottom:24px;width:1px;background:linear-gradient(180deg,var(--teal),var(--purple),var(--border))}
+.rm-item{display:flex;gap:24px;margin-bottom:24px;position:relative}
+.rm-dot-wrap{flex-shrink:0;width:36px;display:flex;align-items:flex-start;justify-content:center;padding-top:2px}
+.rm-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);background:var(--bg);flex-shrink:0;margin-top:5px}
+.rm-dot.active{background:var(--teal);border-color:var(--teal);box-shadow:0 0 12px rgba(194,121,10,.45)}
+.rm-content{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:18px 22px}
+.rm-time{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.rm-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:-.3px}
+.rm-desc{font-size:12px;color:var(--text2);line-height:1.6;margin:0}
+
+/* ── H3 SUB-HEADERS ── */
+h3{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--teal);text-transform:uppercase;margin:28px 0 12px}
+
+/* ── SEPARATOR ── */
+.sep{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:48px 0}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid var(--border);padding:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;max-width:1100px;margin:0 auto}
+.footer-brand{font-size:16px;font-weight:900;letter-spacing:-1px;color:var(--white)}
+.footer-brand span{color:var(--teal)}
+.footer-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--text3)}
+.footer-links a:hover{color:var(--teal)}
+
+/* color text helpers */
+.g{color:var(--green)}
+.r{color:var(--red)}
+.y{color:var(--yellow)}
+.c{color:var(--teal)}
+.dim{color:var(--text3)}
+</style>
+<script src="/gate.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Chop<span>Read</span></div>
+  <div class="nav-links">
+    <a href="#s0">Setup</a>
+    <a href="#s1">Pre-Market</a>
+    <a href="#s2">Opening Range</a>
+    <a href="#s3">Signal ID</a>
+    <a href="#s4">Checklist</a>
+    <a href="#s5">During Trade</a>
+    <a href="#s6">Exit</a>
+    <a href="#ref-gex">GEX Ref</a>
+    <a href="#ref-score">Score Ref</a>
+    <a href="#ref-signals">Signal Ref</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-bg"><div class="hero-grid"></div></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>0DTE Workflow</div>
+    <h1>Ch<span class="accent">0</span>plife</h1>
+    <p class="hero-sub">Complete 0DTE trading workflow — pre-market through close</p>
+  </div>
+</div>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="toc">
+      <div class="toc-title">Contents</div>
+      <div class="toc-section-label">Setup</div>
+      <a href="#s0">0 — First-Time Configuration</a>
+      <div class="toc-section-label">Daily Workflow</div>
+      <a href="#s1">1 — Pre-Market Read</a>
+      <a href="#s2">2 — Opening Range Watch</a>
+      <a href="#s3">3 — Signal Identification</a>
+      <a href="#s4">4 — Trade Setup Checklist</a>
+      <a href="#s5">5 — During the Trade</a>
+      <a href="#s6">6 — Exit Protocol</a>
+      <div class="toc-section-label">Reference</div>
+      <a href="#ref-gex">GEX Regime Reference</a>
+      <a href="#ref-score">Score Tier Reference</a>
+      <a href="#ref-signals">Signal Card Reference</a>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 0 — SETUP -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s0">
+      <div class="section-num">00</div>
+      <div class="section-label">Setup</div>
+      <div class="section-title">First-Time Configuration</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 0.1</div>
+      <div class="step-title">Open Settings and add your API keys</div>
+      <p>Click the <span class="c">⚙ Settings</span> button (top-right of Ch0plife). Enter:</p>
+      <table>
+        <tr><th>Key</th><th>Where to get it</th><th>Required for</th></tr>
+        <tr><td class="td-key">Tradier API Key</td><td>tradier.com → sandbox or production account</td><td>Live options chain, real-time GEX for SPY/QQQ/IWM/stocks</td></tr>
+        <tr><td class="td-key">Polygon.io Key</td><td>polygon.io → free Starter tier works</td><td>SPX GEX (real index chains), 5-min historical bars, flow scanner</td></tr>
+        <tr><td class="td-key">ntfy Topic</td><td>Any string you choose — install ntfy app on phone</td><td>GEX flip alerts, ORB breakout push notifications</td></tr>
+      </table>
+      <div class="callout callout-blue">
+        <div class="callout-label">Note</div>
+        Keys are stored locally in your browser only. They are never transmitted to any server outside Tradier and Polygon directly.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 0.2</div>
+      <div class="step-title">Set your Tradier environment</div>
+      <p>In Settings, choose <strong>Sandbox</strong> (for testing with delayed data) or <strong>Production</strong> (real-time). Sandbox is safe to use while learning — production requires a funded Tradier account.</p>
+      <div class="callout callout-yellow">
+        <div class="callout-label">Tip</div>
+        Start in Sandbox. The GEX regime signal (POS/NEG) and walls will still be accurate enough to learn the system. Switch to Production once you're confident.
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 1 — PRE-MARKET -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s1">
+      <div class="section-num">01</div>
+      <div class="section-label">Phase 1</div>
+      <div class="section-title">Pre-Market Read</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 1</div>
+      <div>
+        <div class="phase-title">Context — Know the environment before the bell</div>
+        <div class="phase-time">8:00 AM – 9:29 AM ET</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 1.1</div>
+      <div class="step-title">Check the Risk Bar (top of page)</div>
+      <p>The three-panel risk bar loads automatically. Read it left to right:</p>
+      <div class="screenshot">[ SCREENSHOT: Risk bar showing VIX · SPY trend chip · Fear &amp; Greed ]
+        <div class="screenshot-label">risk bar — vix / trend / fear &amp; greed</div>
+      </div>
+      <table>
+        <tr><th>Reading</th><th>Meaning</th><th>Bias</th></tr>
+        <tr><td class="td-key">VIX &lt; 16</td><td>Low volatility, compressed premiums</td><td><span class="pill pill-dim">Theta decay favors sellers</span></td></tr>
+        <tr><td class="td-key">VIX 16–24</td><td>Normal market — balanced conditions</td><td><span class="pill pill-cyan">Neutral — scan both sides</span></td></tr>
+        <tr><td class="td-key">VIX &gt; 24</td><td>Elevated fear — wide spreads, fast moves</td><td><span class="pill pill-red">Reduce size, widen stops</span></td></tr>
+        <tr><td class="td-key">SPY trend = ↑ GO</td><td>SPY 5-day trend is upward</td><td><span class="pill pill-green">Calls get tailwind</span></td></tr>
+        <tr><td class="td-key">SPY trend = ↓ WAIT</td><td>SPY 5-day trend is downward</td><td><span class="pill pill-red">Puts get tailwind</span></td></tr>
+        <tr><td class="td-key">F&amp;G Extreme Greed</td><td>Euphoria — often a reversal signal</td><td><span class="pill pill-yellow">Fade upside — put bias</span></td></tr>
+        <tr><td class="td-key">F&amp;G Extreme Fear</td><td>Panic — often a bounce setup</td><td><span class="pill pill-green">Call bias — contrarian</span></td></tr>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 1.2</div>
+      <div class="step-title">Read the Scout Report</div>
+      <p>Below the risk bar, the Scout Report shows each symbol's current directional bias:</p>
+      <div class="screenshot">[ SCREENSHOT: Scout Report rows for SPY / QQQ / IWM / SPX ]
+        <div class="screenshot-label">scout report — directional bias grid</div>
+      </div>
+      <table>
+        <tr><th>Signal</th><th>Read</th></tr>
+        <tr><td><span class="g">↑ GO / CALL</span></td><td>Bullish bias — calls in play</td></tr>
+        <tr><td><span class="y">↔ WAIT</span></td><td>No clear edge — skip or wait</td></tr>
+        <tr><td><span class="r">↓ PUT</span></td><td>Bearish bias — puts in play</td></tr>
+      </table>
+      <p>When 3 of 4 symbols agree (e.g., SPY / QQQ / IWM all show PUT), the macro environment is directionally aligned — higher-probability setups.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 1.3</div>
+      <div class="step-title">Select your symbol for the day</div>
+      <p>Use the <strong>SYM</strong> bar in the CH0PLIFE ENGINE to load your primary focus symbol:</p>
+      <div class="screenshot">[ SCREENSHOT: SYM bar with SPY / QQQ / IWM / SPX / TSLA / NVDA / AMD buttons ]
+        <div class="screenshot-label">symbol selector bar</div>
+      </div>
+      <ul>
+        <li><strong>SPX</strong> — highest volume 0DTE, widest GEX walls, best for scalps</li>
+        <li><strong>SPY</strong> — liquid, smaller contract, easier sizing</li>
+        <li><strong>QQQ</strong> — tech-heavy, higher beta, wider swings on tech news</li>
+        <li><strong>IWM</strong> — small-cap beta, reacts to macro/rates data</li>
+        <li><strong>Custom</strong> — type any ticker (TSLA, NVDA, MARA…) for single-stock 0DTE</li>
+      </ul>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 2 — OPENING RANGE -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s2">
+      <div class="section-num">02</div>
+      <div class="section-label">Phase 2</div>
+      <div class="section-title">Opening Range Watch</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 2</div>
+      <div>
+        <div class="phase-title">ORB Formation — Do not trade until the range is set</div>
+        <div class="phase-time">9:30 AM – 9:50 AM ET</div>
+      </div>
+    </div>
+
+    <div class="callout callout-red">
+      <div class="callout-label">Hard Rule</div>
+      No 0DTE entries during the first 20 minutes. The Opening Range (ORB) is being established. Any trade before 9:50 AM is pure gambling — let the market show its hand.
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 2.1</div>
+      <div class="step-title">Watch the SPY / SPX chart</div>
+      <p>The price chart renders with these overlays once bars load:</p>
+      <div class="screenshot">[ SCREENSHOT: 5-min chart with ORB high/low band, VWAP line, GEX wall markers ]
+        <div class="screenshot-label">5-min chart — orb · vwap · gex levels</div>
+      </div>
+      <table>
+        <tr><th>Overlay</th><th>Color</th><th>Meaning</th></tr>
+        <tr><td class="td-key">ORB High</td><td><span class="g">Green band</span></td><td>Upper edge of the opening 20-min candle range</td></tr>
+        <tr><td class="td-key">ORB Low</td><td><span class="r">Red band</span></td><td>Lower edge of the opening 20-min candle range</td></tr>
+        <tr><td class="td-key">VWAP</td><td><span class="c">Cyan line</span></td><td>Volume-weighted average price — institutional anchor</td></tr>
+        <tr><td class="td-key">Call Wall</td><td><span class="g">Blue dot/line</span></td><td>Highest gamma call strike — overhead resistance magnet</td></tr>
+        <tr><td class="td-key">Put Wall</td><td><span class="r">Red dot/line</span></td><td>Highest gamma put strike — downside support magnet</td></tr>
+        <tr><td class="td-key">Flip Zone</td><td><span class="y">Purple ⬡</span></td><td>GEX polarity flip — market behavior changes here</td></tr>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 2.2</div>
+      <div class="step-title">Note the GEX Regime</div>
+      <p>Find the GEX bar chart and regime banner in the CH0PLIFE ENGINE:</p>
+      <div class="screenshot">[ SCREENSHOT: GEX bi-directional bar chart with ▲ POS GEX or ▼ NEG GEX banner ]
+        <div class="screenshot-label">gamma exposure chart — regime + walls</div>
+      </div>
+      <div class="grid-2">
+        <div class="step" style="margin:0">
+          <div style="color:var(--green);font-size:12px;font-weight:700;margin-bottom:8px">▲ POS GEX — Dealers absorb vol</div>
+          <ul style="margin:0;font-size:12px">
+            <li>Market tends to mean-revert</li>
+            <li>Fade breakouts that stall</li>
+            <li>Tighter stops — less follow-through</li>
+            <li>VWAP reclaims and rejections dominant</li>
+          </ul>
+        </div>
+        <div class="step" style="margin:0">
+          <div style="color:var(--yellow);font-size:12px;font-weight:700;margin-bottom:8px">▼ NEG GEX — Dealers amplify moves</div>
+          <ul style="margin:0;font-size:12px">
+            <li>Trends can run hard and fast</li>
+            <li>Follow breakouts — momentum valid</li>
+            <li>Widen stops — overshoot likely</li>
+            <li>Walls become targets, not ceilings</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 3 — SIGNAL ID -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s3">
+      <div class="section-num">03</div>
+      <div class="section-label">Phase 3</div>
+      <div class="section-title">Signal Identification</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 3</div>
+      <div>
+        <div class="phase-title">Find the Setup — ORB breakout + GEX confirmation</div>
+        <div class="phase-time">9:50 AM – 10:30 AM ET</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3.1</div>
+      <div class="step-title">Wait for ORB breakout confirmation</div>
+      <div class="screenshot">[ SCREENSHOT: Ch0plife engine showing "↑ BULL — broke ORB HIGH $742.15" ]
+        <div class="screenshot-label">orb breakout signal</div>
+      </div>
+      <p>The CH0PLIFE ENGINE will display:</p>
+      <ul>
+        <li><span class="g">↑ BULL — broke ORB HIGH $X.XX</span> → calls in play</li>
+        <li><span class="r">↓ BEAR — broke ORB LOW $X.XX</span> → puts in play</li>
+        <li><span class="dim">→ Inside range — no signal yet</span> → wait</li>
+      </ul>
+      <div class="callout callout-blue">
+        <div class="callout-label">The Only Rule for Entry Direction</div>
+        Price direction at ORB breakout = your trade direction. Simple. If price breaks ORB High → calls. If it breaks ORB Low → puts. Don't fight it. Let the market decide.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3.2</div>
+      <div class="step-title">Read Tomorrow's Watchlist (pre-loaded signal data)</div>
+      <div class="screenshot">[ SCREENSHOT: Tomorrow's Watchlist showing ORB ZONE, CALL WALL, PUT WALL badges ]
+        <div class="screenshot-label">tomorrow's watchlist — key price levels</div>
+      </div>
+      <p>The watchlist shows precalculated levels for today's 0DTE:</p>
+      <table>
+        <tr><th>Badge</th><th>Meaning</th></tr>
+        <tr><td><span class="pill pill-cyan">ORB ZONE</span></td><td>Expected opening range based on prior close structure</td></tr>
+        <tr><td><span class="pill pill-green">CALL WALL $X</span></td><td>Primary upside target — highest gamma call concentration</td></tr>
+        <tr><td><span class="pill pill-red">PUT WALL $X</span></td><td>Primary downside target — highest gamma put concentration</td></tr>
+        <tr><td><span class="pill pill-yellow">⬡ FLIP $X</span></td><td>GEX flip zone — regime changes here, treat as hard invalidation</td></tr>
+        <tr><td><span class="pill pill-dim">Alert</span></td><td>Click to set a browser price alert at that level</td></tr>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3.3</div>
+      <div class="step-title">Check GOOD BONES score</div>
+      <div class="screenshot">[ SCREENSHOT: Good Bones panel showing score 5/7 BULL with green bars ]
+        <div class="screenshot-label">good bones signal grid — confluence score</div>
+      </div>
+      <p>The GOOD BONES panel aggregates 7 confluence factors. Each green bar = +1 point toward the directional case. The score and color tell you setup quality:</p>
+      <div class="score-zone">
+        <div class="sz" style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.18);border-radius:8px">
+          <div class="sz-val r">0–3</div>
+          <div class="sz-label r">No edge</div>
+        </div>
+        <div class="sz" style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:8px">
+          <div class="sz-val y">4–5</div>
+          <div class="sz-label y">Developing</div>
+        </div>
+        <div class="sz" style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.18);border-radius:8px">
+          <div class="sz-val g">6–7</div>
+          <div class="sz-label g">High Confluence</div>
+        </div>
+      </div>
+      <div class="callout callout-yellow">
+        <div class="callout-label">Minimum Threshold</div>
+        Consider only setups scoring 5 or higher. A 4 is marginal — reduce size or skip. A 6–7 is the setup you want: multiple independent signals pointing the same direction.
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 4 — PRE-ENTRY CHECKLIST -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s4">
+      <div class="section-num">04</div>
+      <div class="section-label">Phase 4</div>
+      <div class="section-title">Trade Setup Checklist</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 4</div>
+      <div>
+        <div class="phase-title">Pre-Entry Checklist — All boxes before touching a contract</div>
+        <div class="phase-time">Complete before entering any position</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4.1 — CALL setup checklist</div>
+      <div class="step-title">Use when ORB broke HIGH</div>
+      <ul class="ck">
+        <li><div class="ck-box">✓</div><span>ORB broke <strong>above</strong> the high — confirmed on a close, not just a wick</span></li>
+        <li><div class="ck-box">✓</div><span>Price is <strong>above VWAP</strong> — institutional alignment</span></li>
+        <li><div class="ck-box">✓</div><span>GEX regime is <strong>NEG</strong> (momentum) or <strong>POS</strong> with room to call wall</span></li>
+        <li><div class="ck-box">✓</div><span>CALL WALL is at least <strong>0.5%</strong> above current price — worthwhile target</span></li>
+        <li><div class="ck-box">✓</div><span>GOOD BONES score ≥ 5 and pointing <strong>BULL</strong></span></li>
+        <li><div class="ck-box">✓</div><span>Scout Report shows SPY + QQQ both <strong>GO</strong> (macro aligned)</span></li>
+        <li><div class="ck-box">✓</div><span>VIX is not <strong>spiking</strong> (rising VIX kills call premium fast)</span></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4.2 — PUT setup checklist</div>
+      <div class="step-title">Use when ORB broke LOW</div>
+      <ul class="ck">
+        <li><div class="ck-box">✓</div><span>ORB broke <strong>below</strong> the low — confirmed close below the level</span></li>
+        <li><div class="ck-box">✓</div><span>Price is <strong>below VWAP</strong> — sellers in control</span></li>
+        <li><div class="ck-box">✓</div><span>GEX regime is <strong>NEG</strong> or POS with room to PUT wall below</span></li>
+        <li><div class="ck-box">✓</div><span>PUT WALL is at least <strong>0.5%</strong> below current price — room to run</span></li>
+        <li><div class="ck-box">✓</div><span>GOOD BONES score ≥ 5 and pointing <strong>BEAR</strong></span></li>
+        <li><div class="ck-box">✓</div><span>Scout Report shows SPY + QQQ both <strong>PUT</strong></span></li>
+        <li><div class="ck-box">✓</div><span>VIX not at an extreme high (mean-revert risk)</span></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4.3</div>
+      <div class="step-title">Identify your levels before entry</div>
+      <p>Write these down before clicking buy:</p>
+      <table>
+        <tr><th>Level</th><th>Source in Ch0plife</th><th>Purpose</th></tr>
+        <tr><td class="td-key">Entry</td><td>Current bid/ask — enter on a pullback to VWAP or ORB level after confirmation</td><td>Where you get in</td></tr>
+        <tr><td class="td-key">Target 1</td><td>Call Wall (for calls) / Put Wall (for puts)</td><td>First profit take — 50–70% of position</td></tr>
+        <tr><td class="td-key">Target 2</td><td>Next GEX wall beyond T1</td><td>Remainder of position — let it run</td></tr>
+        <tr><td class="td-key">Stop</td><td>ORB level opposite side (e.g., ORB Low for calls) or GEX Flip Zone</td><td>Hard exit — no negotiating</td></tr>
+      </table>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 5 — DURING TRADE -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s5">
+      <div class="section-num">05</div>
+      <div class="section-label">Phase 5</div>
+      <div class="section-title">During the Trade</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 5</div>
+      <div>
+        <div class="phase-title">Trade Management — Watch, don't chase</div>
+        <div class="phase-time">Position is open</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 5.1</div>
+      <div class="step-title">Monitor the Fire Card</div>
+      <div class="screenshot">[ SCREENSHOT: Fire Card showing MOMENTUM-BULL with HOLD UNTIL 2:30 PM ]
+        <div class="screenshot-label">fire card — live regime + hold signal</div>
+      </div>
+      <p>The Fire Card in the CH0PLIFE ENGINE updates with each data refresh. Key readings:</p>
+      <table>
+        <tr><th>Fire Card State</th><th>Action</th></tr>
+        <tr><td><span class="g">MOMENTUM-BULL</span></td><td>Hold calls — trend intact</td></tr>
+        <tr><td><span class="r">MOMENTUM-BEAR</span></td><td>Hold puts — trend intact</td></tr>
+        <tr><td><span class="y">CHOP / RANGE</span></td><td>Exits are more important — take profit at walls</td></tr>
+        <tr><td><span class="c">REVERSAL SIGNAL</span></td><td>Trail stop aggressively — regime shift possible</td></tr>
+      </table>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 5.2</div>
+      <div class="step-title">Watch for GEX Flip notification</div>
+      <p>If you set up ntfy alerts, you'll receive a push notification when price crosses the GEX flip zone. This is the single most important mid-trade signal:</p>
+      <div class="callout callout-red">
+        <div class="callout-label">GEX Flip Alert = Regime Change</div>
+        When price crosses the ⬡ flip zone, market behavior switches. If you're in a trending trade (NEG GEX), the move may stall. If in a range trade (POS GEX), a new trend could begin. Treat the flip zone as your stop or at minimum a position-size reduction trigger.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 5.3</div>
+      <div class="step-title">Time-of-day awareness</div>
+      <div class="roadmap">
+        <div class="rm-item">
+          <div class="rm-dot-wrap"><div class="rm-dot"></div></div>
+          <div class="rm-content">
+            <div class="rm-time">9:50 AM – 11:00 AM ET</div>
+            <div class="rm-title">Prime window</div>
+            <p class="rm-desc">Maximum theta + directional momentum. Best entries and highest R:R. Most 0DTE profits made here.</p>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot-wrap"><div class="rm-dot"></div></div>
+          <div class="rm-content">
+            <div class="rm-time">11:00 AM – 1:00 PM ET</div>
+            <div class="rm-title">Chop zone</div>
+            <p class="rm-desc">Institutional lunch hour. Low conviction. Avoid new entries unless a catalyst breaks the range. Manage existing positions.</p>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot-wrap"><div class="rm-dot active"></div></div>
+          <div class="rm-content">
+            <div class="rm-time">1:00 PM – 2:30 PM ET</div>
+            <div class="rm-title">Secondary window</div>
+            <p class="rm-desc">Second best window. Bond market closes at 3 PM driving equity flows. Watch for resumption of morning trend.</p>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot-wrap"><div class="rm-dot"></div></div>
+          <div class="rm-content">
+            <div class="rm-time">2:30 PM – 3:45 PM ET</div>
+            <div class="rm-title">Theta crush zone — danger</div>
+            <p class="rm-desc">0DTE contracts lose 50–70% of remaining value in the last 90 minutes unless deep ITM. Hold only if highly confident. Most losses happen from holding too long.</p>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot-wrap"><div class="rm-dot"></div></div>
+          <div class="rm-content">
+            <div class="rm-time">3:45 PM – 4:00 PM ET</div>
+            <div class="rm-title">Close — no new entries</div>
+            <p class="rm-desc">Gamma explosion territory. OTM contracts go to zero. Any remaining 0DTE position that isn't deep ITM should be closed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PHASE 6 — EXIT -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="s6">
+      <div class="section-num">06</div>
+      <div class="section-label">Phase 6</div>
+      <div class="section-title">Exit Protocol</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-tag">Phase 6</div>
+      <div>
+        <div class="phase-title">Exits — Pre-planned, not reactive</div>
+        <div class="phase-time">While in a position</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 6.1</div>
+      <div class="step-title">Take profit at Call/Put Walls</div>
+      <p>GEX walls are the highest concentration of dealer hedging. Price often stalls, reverses, or consolidates at these levels. They are targets, not ceilings.</p>
+      <ul>
+        <li>At Target 1 (first wall): Close 50–70% of position</li>
+        <li>Move stop to breakeven on remainder</li>
+        <li>At Target 2 (next wall or time-based): Close remainder</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 6.2</div>
+      <div class="step-title">Stop-loss triggers</div>
+      <p>Exit the entire position immediately if:</p>
+      <ul>
+        <li>Price closes a 5-min candle <strong>back inside</strong> the ORB (false breakout)</li>
+        <li>Price crosses the <strong>GEX Flip Zone</strong> in the wrong direction</li>
+        <li>The <strong>Fire Card flips</strong> to the opposite regime</li>
+        <li>Time is past <strong>2:30 PM ET</strong> and position is not deep ITM</li>
+        <li>Option loses <strong>50% of entry premium</strong> (hard stop on premium)</li>
+      </ul>
+      <div class="callout callout-red">
+        <div class="callout-label">Non-Negotiable Stop</div>
+        Pre-set your stop in the broker before entering the trade. A stop set in advance doesn't require a decision under pressure. A mental stop is not a stop.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 6.3</div>
+      <div class="step-title">End of day — log your trade</div>
+      <p>After closing, return to Ch0plife and log the trade in your journal. Note:</p>
+      <ul>
+        <li>Symbol, direction (call/put), strike, expiry</li>
+        <li>Entry price, exit price, P&amp;L</li>
+        <li>GEX regime at entry, GOOD BONES score</li>
+        <li>What worked / what you would change</li>
+      </ul>
+      <div class="callout callout-green">
+        <div class="callout-label">Why this matters</div>
+        The scanner backtest system logs every signal with a score. Reviewing your own trades against the scanner's signal history reveals whether you're trading the edge — or trading around it.
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- REFERENCE — GEX -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="ref-gex">
+      <div class="section-num">R1</div>
+      <div class="section-label">Reference</div>
+      <div class="section-title">GEX Regime Cheat Sheet</div>
+    </div>
+
+    <table>
+      <tr><th>Regime</th><th>Dealer behavior</th><th>Expected price action</th><th>Best play</th></tr>
+      <tr><td><span class="g">▲ POS GEX</span></td><td>Dealers buy dips, sell rips to hedge</td><td>Mean reversion, tight range, walls hold</td><td>Sell premium, fade extremes, quick scalps</td></tr>
+      <tr><td><span class="y">▼ NEG GEX</span></td><td>Dealers buy dips AND sell dips — amplify</td><td>Trending, breakouts follow-through, walls blown through</td><td>Buy momentum, hold through walls, wider stops</td></tr>
+      <tr><td><span class="c">⬡ Flip Zone</span></td><td>Regime transition</td><td>Volatility spikes, direction uncertain</td><td>Reduce or exit, wait for new regime</td></tr>
+    </table>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- REFERENCE — SCORE -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="ref-score">
+      <div class="section-num">R2</div>
+      <div class="section-label">Reference</div>
+      <div class="section-title">GOOD BONES Score Breakdown</div>
+    </div>
+
+    <table>
+      <tr><th>#</th><th>Factor</th><th>Bullish = green when...</th><th>Bearish = red when...</th></tr>
+      <tr><td>1</td><td>ORB Breakout</td><td>Broke above ORB High</td><td>Broke below ORB Low</td></tr>
+      <tr><td>2</td><td>VWAP Position</td><td>Price above VWAP</td><td>Price below VWAP</td></tr>
+      <tr><td>3</td><td>GEX Regime</td><td>NEG GEX (momentum ally)</td><td>NEG GEX (momentum ally)</td></tr>
+      <tr><td>4</td><td>Call Wall Room</td><td>≥0.5% space to next call wall</td><td>Put wall ≥0.5% below</td></tr>
+      <tr><td>5</td><td>VIX Direction</td><td>VIX falling (risk-on)</td><td>VIX rising (risk-off)</td></tr>
+      <tr><td>6</td><td>Futures Alignment</td><td>ES/NQ green pre-market</td><td>ES/NQ red pre-market</td></tr>
+      <tr><td>7</td><td>Scout Consensus</td><td>3+ of 4 symbols showing GO</td><td>3+ of 4 showing PUT</td></tr>
+    </table>
+
+    <div class="sep"></div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- REFERENCE — SIGNAL CARDS -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="section-header" id="ref-signals">
+      <div class="section-num">R3</div>
+      <div class="section-label">Reference</div>
+      <div class="section-title">Signal Cards in the CH0PLIFE ENGINE</div>
+    </div>
+
+    <table>
+      <tr><th>Card</th><th>What it shows</th><th>How to use it</th></tr>
+      <tr><td class="td-key">ORB Status</td><td>Opening range bounds + breakout direction</td><td>Entry direction trigger</td></tr>
+      <tr><td class="td-key">VWAP</td><td>Live VWAP computed from 5-min bars</td><td>Trend filter — above=bullish, below=bearish</td></tr>
+      <tr><td class="td-key">GEX Chart</td><td>Bi-directional gamma exposure by strike</td><td>Walls = targets/stops, regime = momentum filter</td></tr>
+      <tr><td class="td-key">GEX Magnets</td><td>Top 2 call walls + top 2 put walls as pills</td><td>Set price alerts with the Alert button</td></tr>
+      <tr><td class="td-key">Fire Card</td><td>Regime summary with hold/exit signal</td><td>Mid-trade management: hold or exit</td></tr>
+      <tr><td class="td-key">Good Bones</td><td>7-factor confluence score</td><td>Pre-entry gate — skip if &lt;5</td></tr>
+      <tr><td class="td-key">Multi-GEX Dashboard</td><td>SPY / QQQ / SPX side-by-side GEX regimes</td><td>Cross-symbol alignment check</td></tr>
+      <tr><td class="td-key">Scout Report</td><td>Directional bias for all 4 major symbols</td><td>Macro context — how aligned is the market</td></tr>
+      <tr><td class="td-key">Tomorrow's Watchlist</td><td>Pre-calc'd key levels for today's 0DTE</td><td>Know your levels before market opens</td></tr>
+    </table>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">CH<span>0</span>PLIFE</div>
+    <div class="footer-sub">0DTE Workflow Guide · <span id="doc-date"></span></div>
+  </div>
+  <div class="footer-links">
+    <a href="https://app.chopread.com">← Live Tool</a>
+  </div>
+</footer>
+
+<script>
+document.getElementById('doc-date').textContent=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long'});
+</script>
+
+</body>
+</html>

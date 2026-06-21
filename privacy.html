@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChopRead — Privacy & Terms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="/gate.js"></script>
+<style>
+  :root {
+    --bg: #06080d;
+    --surface: #0c0f18;
+    --border: #1a2030;
+    --border2: #232b3e;
+    --text: #c8d0e0;
+    --text2: #8896b0;
+    --text3: #4a5568;
+    --white: #f0f4ff;
+    --teal: #C2790A;
+    --green: #C2790A;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── Nav ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .nav-brand {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-brand span {
+    color: var(--teal);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .nav-links a:hover {
+    color: var(--white);
+    background: var(--border);
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .page-meta {
+    font-size: 13px;
+    color: var(--text3);
+    font-weight: 400;
+  }
+
+  /* ── Sections ── */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section h2::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--teal);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .section p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  .section strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ── Disclaimer callout ── */
+  .callout {
+    background: rgba(52, 211, 153, 0.06);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 8px;
+  }
+
+  .callout p {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* ── Footer ── */
+  .page-footer {
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .page-footer a {
+    font-size: 13px;
+    color: var(--text2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+
+  .page-footer a:hover {
+    color: var(--teal);
+  }
+
+  .page-footer .sep {
+    color: var(--text3);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://app.chopread.com" class="nav-brand">Chop<span>Read</span></a>
+  <ul class="nav-links">
+    <li><a href="https://app.chopread.com">Tools</a></li>
+    <li><a href="index.html">Pro</a></li>
+    <li><a href="track-record.html">Track Record</a></li>
+    <li><a href="chop-workflow.html">Guide</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Legal</div>
+    <h1 class="page-title">Privacy Policy &amp; Terms</h1>
+    <p class="page-meta">Last updated: 14 June 2026</p>
+  </div>
+
+  <div class="section">
+    <h2>1. What we collect</h2>
+    <p>We do not require an account to use the free tools, and your tool settings (API keys, journal,
+    watchlists) are stored <strong>only in your browser's local storage</strong> — they are not sent to us.
+    For <strong>ChopRead</strong>, our payment provider (e.g. Stripe/Whop) collects the billing
+    details needed to process your subscription; we receive only what's required to grant access (such as
+    your email and subscription status). We never see or store full card numbers.</p>
+  </div>
+
+  <div class="section">
+    <h2>2. Advertising &amp; analytics</h2>
+    <p>The site may use privacy-respecting analytics to understand aggregate usage. We do not sell your
+    personal information.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. Not financial advice</h2>
+    <div class="callout">
+      <p>ChopRead provides <strong>educational tools and information only</strong>.
+      Nothing on this site is financial, investment, tax, or trading advice, or a recommendation to buy or
+      sell any security. We are not a registered investment adviser or broker-dealer. Trading options
+      involves substantial risk of loss; you can lose more than your initial investment. Any past or
+      backtested results are hypothetical and not indicative of future results. You are solely responsible
+      for your own decisions.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. Subscriptions</h2>
+    <p>Pro subscriptions bill on a recurring basis until cancelled. You can cancel anytime; access
+    continues through the end of the paid period. Refunds are handled per the terms shown at checkout.</p>
+  </div>
+
+  <div class="section">
+    <h2>5. Your choices</h2>
+    <p>Clearing your browser data removes locally stored settings. To cancel a subscription or request
+    data deletion, contact us below.</p>
+  </div>
+
+  <div class="section">
+    <h2>6. Contact</h2>
+    <p>Questions: <strong>[YOUR SUPPORT EMAIL]</strong></p>
+  </div>
+
+  <div class="page-footer">
+    <a href="https://app.chopread.com">&larr; Back to the app</a>
+    <span class="sep">·</span>
+    <a href="index.html">ChopRead</a>
+  </div>
+
+</div>
+</body>
+</html>
